@@ -10,7 +10,7 @@
 
     <groupId>com.facebook.presto</groupId>
     <artifactId>presto-root</artifactId>
-    <version>0.148</version>
+    <version>0.148-kmk</version>
     <packaging>pom</packaging>
 
     <name>presto-root</name>
@@ -28,9 +28,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:git://github.com/facebook/presto.git</connection>
-        <url>https://github.com/facebook/presto</url>
-        <tag>0.148</tag>
+        <connection>scm:git:git://github.com/KMK-ONLINE/presto.git</connection>
+        <url>https://github.com/KMK-ONLINE/presto</url>
+        <tag>0.148-kmk</tag>
     </scm>
 
     <properties>
