@@ -30,6 +30,7 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3EncryptionClient;
+import com.amazonaws.services.s3.S3ClientOptions;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.CryptoConfiguration;
 import com.amazonaws.services.s3.model.EncryptionMaterialsProvider;
@@ -132,6 +133,8 @@ public class PrestoS3FileSystem
     public static final String S3_MULTIPART_MIN_PART_SIZE = "presto.s3.multipart.min-part-size";
     public static final String S3_USE_INSTANCE_CREDENTIALS = "presto.s3.use-instance-credentials";
     public static final String S3_PIN_CLIENT_TO_CURRENT_REGION = "presto.s3.pin-client-to-current-region";
+    public static final String S3_ENDPOINT = "presto.s3.endpoint";
+    public static final String S3_PATH_STYLE_ACCESS = "presto.s3.path-style-access";
     public static final String S3_ENCRYPTION_MATERIALS_PROVIDER = "presto.s3.encryption-materials-provider";
     public static final String S3_SSE_ENABLED = "presto.s3.sse.enabled";
 
@@ -149,6 +152,8 @@ public class PrestoS3FileSystem
     private Duration maxRetryTime;
     private boolean useInstanceCredentials;
     private boolean pinS3ClientToCurrentRegion;
+    private String endpoint;
+    private boolean pathStyleAccess;
     private boolean sseEnabled;
 
     @Override
@@ -177,6 +182,8 @@ public class PrestoS3FileSystem
         long minPartSize = conf.getLong(S3_MULTIPART_MIN_PART_SIZE, defaults.getS3MultipartMinPartSize().toBytes());
         this.useInstanceCredentials = conf.getBoolean(S3_USE_INSTANCE_CREDENTIALS, defaults.isS3UseInstanceCredentials());
         this.pinS3ClientToCurrentRegion = conf.getBoolean(S3_PIN_CLIENT_TO_CURRENT_REGION, defaults.isPinS3ClientToCurrentRegion());
+        this.endpoint = conf.get(S3_ENDPOINT, defaults.getS3Endpoint());
+        this.pathStyleAccess = conf.getBoolean(S3_PATH_STYLE_ACCESS, defaults.isS3PathStyleAccess());
         this.sseEnabled = conf.getBoolean(S3_SSE_ENABLED, defaults.isS3SseEnabled());
 
         ClientConfiguration configuration = new ClientConfiguration()
@@ -615,6 +622,15 @@ public class PrestoS3FileSystem
                 client.setRegion(region);
             }
         }
+
+        if (endpoint != null) {
+            client.setEndpoint(endpoint);
+        }
+
+        S3ClientOptions options = new S3ClientOptions();
+        options.setPathStyleAccess(pathStyleAccess);
+
+        client.setS3ClientOptions(options);
 
         return client;
     }

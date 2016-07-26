@@ -97,6 +97,8 @@ public class HiveClientConfig
     private DataSize s3MultipartMinPartSize = new DataSize(5, MEGABYTE);
     private boolean useParquetColumnNames;
     private boolean pinS3ClientToCurrentRegion;
+    private String s3Endpoint;
+    private boolean s3PathStyleAccess = false;
 
     private HiveStorageFormat hiveStorageFormat = HiveStorageFormat.RCBINARY;
     private HiveCompressionCodec hiveCompressionCodec = HiveCompressionCodec.GZIP;
@@ -777,6 +779,32 @@ public class HiveClientConfig
     public HiveClientConfig setPinS3ClientToCurrentRegion(boolean pinS3ClientToCurrentRegion)
     {
         this.pinS3ClientToCurrentRegion = pinS3ClientToCurrentRegion;
+        return this;
+    }
+
+    public String getS3Endpoint()
+    {
+      return this.s3Endpoint;
+    }
+
+    @Config("hive.s3.endpoint")
+    @ConfigDescription("Use custom S3 endpoint URL")
+    public HiveClientConfig setS3Endpoint(String s3Endpoint)
+    {
+        this.s3Endpoint = s3Endpoint;
+        return this;
+    }
+
+    public boolean isS3PathStyleAccess()
+    {
+        return s3PathStyleAccess;
+    }
+
+    @Config("hive.s3.path-style-access")
+    @ConfigDescription("Use path-style access instead of virtual-hosted style")
+    public HiveClientConfig setS3PathStyleAccess(boolean s3PathStyleAccess)
+    {
+        this.s3PathStyleAccess = s3PathStyleAccess;
         return this;
     }
 
